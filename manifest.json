@@ -1,0 +1,17 @@
+{
+  "name": "Game Malta Weather",
+  "short_name": "Game Weather",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0f121a",
+  "theme_color": "#141823",
+  "description": "Niche Malta weather and hunting legal time dashboard.",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
