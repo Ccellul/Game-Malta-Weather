@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malta Weather & Forecast</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+        <nav class="bottom-nav">
+            <button class="nav-btn active" onclick="openTab('tab-weather', this)">🌤️ Weather</button>
+            <button class="nav-btn" onclick="openTab('tab-rules', this)">📜 Rules</button>
+            <button class="nav-btn" onclick="openTab('tab-dates', this)">📅 Dates</button>
+        </nav>
+    </div>
+
+    <div class="app-container">
+<div id="tab-weather" class="tab-content active">
+    <h1><br>Game Malta Weather</h1>
+    <h3>Stay legal</h3>
+    
+    <div class="card main-weather-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div style="text-align: center; flex: 1;">
+                <h2 id="today-date-header">Today's Weather</h2>
+                <div id="current-temp" style="font-size: 2.5rem; margin: 7px 0;">--°C</div>
+                <div id="current-desc" style="color: #a4b0be;">Loading...</div>
+            </div>
+
+            <div style="flex: 1; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; font-size: 0.85rem;margin-top: 110px;">
+                <div style="color: #eccc68; margin-bottom: 8px;">🌔 Next Moon Phases</div>
+                <div id="moon-calendar"></div>
+            </div>
+        </div>
+
+        <hr style="border: 0.5px solid rgba(255,255,255,0.1); margin: 20px 0;">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left; font-size: 0.9rem;">
+            <div><strong>Wind:</strong> <span id="wind-dir">--</span></div>
+            <div><strong>Force:</strong> <span id="wind-bft">--</span></div>
+            <div><strong>Rain:</strong> <span id="rain-info">--</span></div>
+            <div><strong>Moon:</strong> <span id="moon-phase">--</span></div>
+        </div>
+    </div>
+
+    <div id="hunting-status-box" class="status-box">
+        <span id="hunting-icon"></span> <span id="hunting-status">Calculating...</span>
+    </div>
+
+    <div id="season-badge-container"></div>
+
+    <div id="today-law-block" class="card">
+        <h3 style="color: #eccc68; font-size: 0.9rem; margin-bottom: 10px;">🌅 TODAY'S LEGAL TIMES</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.85rem;">
+            <div>First Light: <strong id="first-light">--</strong></div>
+            <div>Last Light: <strong id="last-light">--</strong></div>
+            <div>Sunrise: <span id="sunrise">--</span></div>
+            <div>Sunset: <span id="sunset">--</span></div>
+        </div>
+    </div>
+
+    <div id="tomorrow-law-block" class="card">
+        <h3 style="color: #a4b0be; font-size: 0.9rem; margin-bottom: 10px;">🌅 TOMORROW'S TIMES (<span id="tomorrow-date">--</span>)</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.85rem;">
+            <div>First Light: <strong id="tom-first-light">--</strong></div>
+            <div>Last Light: <strong id="tom-last-light">--</strong></div>
+            <div>Sunrise: <span id="tom-sunrise">--</span></div>
+            <div>Sunset: <span id="tom-sunset">--</span></div>
+        </div>
+    </div>
+
+    <h2>5-Day Forecast</h2>
+    <div id="forecast-container" class="forecast-grid"></div>
+</div>
+
+        <div id="tab-rules" class="tab-content">
+            <h1>Hunting & Trapping Rules</h1>
+            
+            <div class="card rule-card">
+                <h3>🐇 Rabbit Hunting</h3>
+                <ul>
+                    <li>Season: 1st June to 31st December.</li>
+                    <li>Permission from landowner is mandatory.</li>
+                    <li>Max 2 dogs per hunter.</li>
+                </ul>
+            </div>
+
+            <div class="card rule-card">
+                <h3>🦆 Bird Hunting (Land)</h3>
+                <ul>
+                    <li>Autumn: 1st Sept to 31st Jan.</li>
+                    <li>Spring: Specific dates announced yearly (usually April).</li>
+                    <li>Must wear carnation/orange hat/vest if required by law.</li>
+                </ul>
+            </div>
+
+            <div class="card rule-card">
+                <h3>🕸️ Finches (7 Species) Trapping</h3>
+                <ul>
+                    <li>Research period: As per derogation (20th Oct to 20th Dec).</li>
+                    <li>Live decoys must be ringed.</li>
+                    <li>All birds caught must be released after recording.</li>
+                </ul>
+            </div>
+
+            <div class="card rule-card">
+                <h3>🏺 Plover & Song Thrush</h3>
+                <ul>
+                    <li>Season: 20th Oct to 10th Jan.</li>
+                    <li>Manual or whistle decoys only.</li>
+                    <li>Specific mesh sizes apply to nets.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="tab-dates" class="tab-content">
+            <h1>Season Dates</h1>
+            <div class="card">
+                <table style="width:100%; border-collapse: collapse; color: white;">
+                    <tr style="border-bottom: 1px solid #444;">
+                        <th style="text-align:left; padding: 10px;">Species</th>
+                        <th style="text-align:right; padding: 10px;">Dates</th>
+                    </tr>
+                    <tr><td style="padding: 10px;">Rabbit</td><td style="text-align:right;">Jun 01 - Dec 31</td></tr>
+                    <tr><td style="padding: 10px;">Autumn Bird</td><td style="text-align:right;">Sep 01 - Jan 31</td></tr>
+                    <tr><td style="padding: 10px;">Spring Bird</td><td style="text-align:right;">As per derogation</td></tr>
+                    <tr><td style="padding: 10px;">Finch Trapping</td><td style="text-align:right;">As per derogation</td></tr>
+                    <tr><td style="padding: 10px;">Plover/Thrush</td><td style="text-align:right;">Oct 20 - Jan 10</td></tr>
+                </table>
+            </div>
+        </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
