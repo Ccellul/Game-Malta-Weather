@@ -1,5 +1,37 @@
 const apiKey = 'ZWPD26FNK8TNRY9ZQAWPWWKHG'; 
-const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/Luqa,Malta?unitGroup=metric&key=${apiKey}&contentType=json`;
+
+// 1. Turn fetchWeather into a function that accepts a location name
+async function fetchWeather(location = "Luqa,Malta") {
+    try {
+        // Dynamic URL based on what location is passed in
+        const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&key=${apiKey}&contentType=json`;
+        
+        const response = await fetch(url);
+        const data = await response.json();
+        const current = data.currentConditions;
+        const today = data.days[0];
+        const tomorrow = data.days[1];
+
+        // ... Keep ALL your existing display logic here (Current Card, Moon, Legal Times, Forecast) ...
+        // (Just make sure you don't accidentally delete your inner code!)
+
+    } catch (e) { console.error(e); }
+}
+
+// 2. Listen for the dropdown changing on the screen
+document.addEventListener('DOMContentLoaded', () => {
+    const locSelect = document.getElementById('location-select');
+    
+    if (locSelect) {
+        locSelect.addEventListener('change', (event) => {
+            // When the user picks a new town, fetch the new weather!
+            fetchWeather(event.target.value);
+        });
+    }
+});
+
+// 3. Initial load when the app first opens
+fetchWeather("Luqa,Malta");
 
 // --- HELPER FUNCTIONS ---
 
