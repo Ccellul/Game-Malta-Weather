@@ -1,39 +1,148 @@
 const apiKey = 'ZWPD26FNK8TNRY9ZQAWPWWKHG'; 
 
-// 1. Turn fetchWeather into a function that accepts a location name
+// --- MAIN FETCH FUNCTION WITH FIXED LOCATION PARAMETER ---
 async function fetchWeather(location = "Luqa,Malta") {
     try {
-        // Dynamic URL based on what location is passed in
-        const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(location)}?unitGroup=metric...`;
+        // Dynamic URL based on what location is passed in from the dropdown
+        const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(location)}?unitGroup=metric&key=${apiKey}&contentType=json`;
         
         const response = await fetch(url);
         const data = await response.json();
         const current = data.currentConditions;
-        const today = data.days[0];
-        const tomorrow = data.days[1];
+        const todayData = data.days[0];
+        const tomorrowData = data.days[1];
 
-        // ... Keep ALL your existing display logic here (Current Card, Moon, Legal Times, Forecast) ...
-        // (Just make sure you don't accidentally delete your inner code!)
+        // 0. Safety Check
+        if (!document.getElementById('current-temp')) return;
 
-   } catch (e) {
-        console.error("Weather Fetch Error: ", e);
+        // 1. Basic Info
+        updateText('today-date-header', `Today's Weather (${formatDateString(todayData.datetime)})`);
+        updateText('tomorrow-date', formatDateString(tomorrowData.datetime));
+        
+        const currentIconEmoji = getWeatherEmoji(current.icon);
+        updateText('current-temp', `${currentIconEmoji} ${Math.round(current.temp)}°C`);
+        updateText('current-desc', current.conditions);
+        updateText('wind-dir', getWindDirection(current.winddir));
+        updateText('wind-bft', `${getBeaufort(current.windspeed)} BFT`);
+        updateText('moon-phase', getMoonPhaseName(todayData.moonphase));
+
+        // 2. Moon Calendar
+        const moonCalContainer = document.getElementById('moon-calendar');
+        if (moonCalContainer) {
+            const upcomingPhases = getUpcomingMoonPhases(todayData.moonphase, todayData.datetime);
+            moonCalContainer.innerHTML = ''; 
+            upcomingPhases.forEach(phase => {
+                moonCalContainer.innerHTML += `<div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05);"><span>${phase.icon} ${phase.name}</span><span style="color: #a4b0be;">${phase.date}</span></div>`;
+            });
+        }
+
+        // 3. Rain Tracker
+        let rainTime = "No rain expected today";
+        if (todayData.hours) {
+            for (let hour of todayData.hours) {
+                if (hour.precip > 0 && hour.precipprob > 30) {
+                    rainTime = `Rain expected at ${hour.datetime.substring(0, 5)}`;
+                    break;
+                }
+            }
+        }
+        updateText('rain-info', rainTime);
+
+        // 4. Laws & Seasons
+        const todayLaw = calculateLegalTimes(todayData.sunrise, todayData.sunset, todayData.datetime);
+        const tomLaw = calculateLegalTimes(tomorrowData.sunrise, tomorrowData.sunset, tomorrowData.datetime);
+
+        updateText('sunrise', todayData.sunrise.substring(0, 5));
+        updateText('sunset', todayData.sunset.substring(0, 5));
+        updateText('first-light', todayLaw.firstLight);
+        updateText('last-light', todayLaw.lastLight);
+        updateText('tom-sunrise', tomorrowData.sunrise.substring(0, 5));
+        updateText('tom-sunset', tomorrowData.sunset.substring(0, 5));
+        updateText('tom-first-light', tomLaw.firstLight);
+        updateText('tom-last-light', tomLaw.lastLight);
+
+        const todaySeasons = getActiveSeasons(todayData.datetime);
+        const badgeContainer = document.getElementById('season-badge-container');
+        const anyOpen = todaySeasons.some(s => s.type === 'open');
+
+        if (badgeContainer) {
+            badgeContainer.innerHTML = '';
+            const todayBlock = document.getElementById('today-law-block');
+            const tomBlock = document.getElementById('tomorrow-law-block');
+
+            if (!anyOpen) {
+                if (todayBlock) todayBlock.style.display = 'none';
+                if (tomBlock) tomBlock.style.display = 'none';
+                todaySeasons.forEach(s => {
+                    badgeContainer.innerHTML += `<div style="background: rgba(236,204,104,0.1); color: #eccc68; padding: 20px; border-radius: 12px; text-align: center; border: 1px dashed #eccc68; margin: 20px 0;"><strong>${s.label}</strong></div>`;
+                });
+            } else {
+                if (todayBlock) todayBlock.style.display = 'block';
+                if (tomBlock) tomBlock.style.display = 'block';
+                todaySeasons.forEach(s => {
+                    badgeContainer.innerHTML += `<div style="background: rgba(116,185,255,0.1); color: #ffffff; padding: 8px 12px; border-radius: 6px; font-weight: bold; border: 1px solid #74b9ff; margin-bottom: 5px;">${s.label}</div>`;
+                });
+            }
+        }
+
+        // 5. Live Status
+        const now = new Date();
+        const currentHHMM = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        const statusBox = document.getElementById('hunting-status-box');
+        if (statusBox) {
+            if (anyOpen && currentHHMM >= todayLaw.firstLight && currentHHMM <= todayLaw.lastLight) {
+                statusBox.className = "status-box legal-hunting";
+                updateText('hunting-status', "LEGAL HUNTING WINDOW OPEN");
+                updateText('hunting-icon', `🟢 ${todaySeasons.filter(s => s.type==='open').map(s => s.icon).join(' ')}`);
+            } else {
+                statusBox.className = "status-box illegal-hunting";
+                updateText('hunting-status', "HUNTING CLOSED / FORBIDDEN NOW");
+                updateText('hunting-icon', "🛑");
+            }
+        }
+
+        // 6. Forecast
+        const forecastContainer = document.getElementById('forecast-container');
+        if (forecastContainer) {
+            forecastContainer.innerHTML = ''; 
+            for (let i = 1; i <= 5; i++) {
+                const day = data.days[i];
+                const dateObj = new Date(day.datetime);
+                const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+                forecastContainer.innerHTML += `
+                    <div class="forecast-card">
+                        <div style="display: flex; justify-content: space-between; width: 100%;">
+                            <strong>${dayName} (${dateObj.getDate()}/${dateObj.getMonth() + 1})</strong>
+                            <strong>${Math.round(day.tempmax)}°C</strong>
+                        </div>
+                        <div style="font-size: 0.9rem; color: #a4b0be;">${getWeatherEmoji(day.icon)} ${day.conditions}</div>
+                        <div style="font-size: 0.85rem; color: #ffffff; background: rgba(116, 185, 255, 0.15); padding: 3px 8px; border-radius: 4px; margin-top: 4px;">
+                            💨 ${getWindDirection(day.winddir)} @ ${getBeaufort(day.windspeed)} BFT
+                        </div>
+                    </div>`;
+            }
+        }
+    } catch (e) { 
+        console.error("Weather failed to load:", e);
+        updateText('current-desc', "Error loading data.");
     }
 }
 
-// 2. Listen for the dropdown changing on the screen
+// --- LISTEN FOR DROPDOWN CHANGING ---
 document.addEventListener('DOMContentLoaded', () => {
     const locSelect = document.getElementById('location-select');
     
     if (locSelect) {
         locSelect.addEventListener('change', (event) => {
-            // When the user picks a new town, fetch the new weather!
+            // Re-fetch the data when someone switches the zone!
             fetchWeather(event.target.value);
         });
     }
 });
 
-// 3. Initial load when the app first opens
+// --- INITIAL LOAD WHEN APP OPENS ---
 fetchWeather("Luqa,Malta");
+
 
 // --- HELPER FUNCTIONS ---
 
@@ -171,135 +280,6 @@ const updateText = (id, text) => {
     const el = document.getElementById(id);
     if (el) el.innerText = text;
 };
-
-// --- MAIN FETCH FUNCTION ---
-
-async function fetchWeather() {
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-        const current = data.currentConditions;
-        const todayData = data.days[0];
-        const tomorrowData = data.days[1];
-
-        // 0. Safety Check
-        if (!document.getElementById('current-temp')) return;
-
-        // 1. Basic Info
-        updateText('today-date-header', `Today's Weather (${formatDateString(todayData.datetime)})`);
-        updateText('tomorrow-date', formatDateString(tomorrowData.datetime));
-        
-        const currentIconEmoji = getWeatherEmoji(current.icon);
-        updateText('current-temp', `${currentIconEmoji} ${Math.round(current.temp)}°C`);
-        updateText('current-desc', current.conditions);
-        updateText('wind-dir', getWindDirection(current.winddir));
-        updateText('wind-bft', `${getBeaufort(current.windspeed)} BFT`);
-        updateText('moon-phase', getMoonPhaseName(todayData.moonphase));
-
-        // 2. Moon Calendar
-        const moonCalContainer = document.getElementById('moon-calendar');
-        if (moonCalContainer) {
-            const upcomingPhases = getUpcomingMoonPhases(todayData.moonphase, todayData.datetime);
-            moonCalContainer.innerHTML = ''; 
-            upcomingPhases.forEach(phase => {
-                moonCalContainer.innerHTML += `<div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05);"><span>${phase.icon} ${phase.name}</span><span style="color: #a4b0be;">${phase.date}</span></div>`;
-            });
-        }
-
-        // 3. Rain Tracker
-        let rainTime = "No rain expected today";
-        if (todayData.hours) {
-            for (let hour of todayData.hours) {
-                if (hour.precip > 0 && hour.precipprob > 30) {
-                    rainTime = `Rain expected at ${hour.datetime.substring(0, 5)}`;
-                    break;
-                }
-            }
-        }
-        updateText('rain-info', rainTime);
-
-        // 4. Laws & Seasons
-        const todayLaw = calculateLegalTimes(todayData.sunrise, todayData.sunset, todayData.datetime);
-        const tomLaw = calculateLegalTimes(tomorrowData.sunrise, tomorrowData.sunset, tomorrowData.datetime);
-
-        updateText('sunrise', todayData.sunrise.substring(0, 5));
-        updateText('sunset', todayData.sunset.substring(0, 5));
-        updateText('first-light', todayLaw.firstLight);
-        updateText('last-light', todayLaw.lastLight);
-        updateText('tom-sunrise', tomorrowData.sunrise.substring(0, 5));
-        updateText('tom-sunset', tomorrowData.sunset.substring(0, 5));
-        updateText('tom-first-light', tomLaw.firstLight);
-        updateText('tom-last-light', tomLaw.lastLight);
-
-        const todaySeasons = getActiveSeasons(todayData.datetime);
-        const badgeContainer = document.getElementById('season-badge-container');
-        const anyOpen = todaySeasons.some(s => s.type === 'open');
-
-        if (badgeContainer) {
-            badgeContainer.innerHTML = '';
-            const todayBlock = document.getElementById('today-law-block');
-            const tomBlock = document.getElementById('tomorrow-law-block');
-
-            if (!anyOpen) {
-                if (todayBlock) todayBlock.style.display = 'none';
-                if (tomBlock) tomBlock.style.display = 'none';
-                todaySeasons.forEach(s => {
-                    badgeContainer.innerHTML += `<div style="background: rgba(236,204,104,0.1); color: #eccc68; padding: 20px; border-radius: 12px; text-align: center; border: 1px dashed #eccc68; margin: 20px 0;"><strong>${s.label}</strong></div>`;
-                });
-            } else {
-                if (todayBlock) todayBlock.style.display = 'block';
-                if (tomBlock) tomBlock.style.display = 'block';
-                todaySeasons.forEach(s => {
-                    badgeContainer.innerHTML += `<div style="background: rgba(116,185,255,0.1); color: #ffffff; padding: 8px 12px; border-radius: 6px; font-weight: bold; border: 1px solid #74b9ff; margin-bottom: 5px;">${s.label}</div>`;
-                });
-            }
-        }
-
-        // 5. Live Status
-        const now = new Date();
-        const currentHHMM = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-        const statusBox = document.getElementById('hunting-status-box');
-        if (statusBox) {
-            if (anyOpen && currentHHMM >= todayLaw.firstLight && currentHHMM <= todayLaw.lastLight) {
-                statusBox.className = "status-box legal-hunting";
-                updateText('hunting-status', "LEGAL HUNTING WINDOW OPEN");
-                updateText('hunting-icon', `🟢 ${todaySeasons.filter(s => s.type==='open').map(s => s.icon).join(' ')}`);
-            } else {
-                statusBox.className = "status-box illegal-hunting";
-                updateText('hunting-status', "HUNTING CLOSED / FORBIDDEN NOW");
-                updateText('hunting-icon', "🛑");
-            }
-        }
-
-        // 6. Forecast
-        const forecastContainer = document.getElementById('forecast-container');
-        if (forecastContainer) {
-            forecastContainer.innerHTML = ''; 
-            for (let i = 1; i <= 5; i++) {
-                const day = data.days[i];
-                const dateObj = new Date(day.datetime);
-                const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
-                forecastContainer.innerHTML += `
-                    <div class="forecast-card">
-                        <div style="display: flex; justify-content: space-between; width: 100%;">
-                            <strong>${dayName} (${dateObj.getDate()}/${dateObj.getMonth() + 1})</strong>
-                            <strong>${Math.round(day.tempmax)}°C</strong>
-                        </div>
-                        <div style="font-size: 0.9rem; color: #a4b0be;">${getWeatherEmoji(day.icon)} ${day.conditions}</div>
-                        <div style="font-size: 0.85rem; color: #ffffff; background: rgba(116, 185, 255, 0.15); padding: 3px 8px; border-radius: 4px; margin-top: 4px;">
-                            💨 ${getWindDirection(day.winddir)} @ ${getBeaufort(day.windspeed)} BFT
-                        </div>
-                    </div>`;
-            }
-        }
-    } catch (e) { 
-        console.error("Weather failed to load:", e);
-        updateText('current-desc', "Error loading data.");
-    }
-}
-
-// Start the fetch
-fetchWeather("Luqa,Malta");
 
 // --- TAB NAVIGATION ---
 function openTab(tabId, btnElement) {
