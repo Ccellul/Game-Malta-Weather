@@ -15,7 +15,9 @@ async function fetchWeather(location = "Luqa,Malta") {
         // ... Keep ALL your existing display logic here (Current Card, Moon, Legal Times, Forecast) ...
         // (Just make sure you don't accidentally delete your inner code!)
 
-    } catch (e) { console.error(e); }
+   } catch (e) {
+        console.error("Weather Fetch Error: ", e);
+    }
 }
 
 // 2. Listen for the dropdown changing on the screen
