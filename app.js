@@ -299,7 +299,7 @@ async function fetchWeather() {
 }
 
 // Start the fetch
-fetchWeather();
+fetchWeather("Luqa,Malta");
 
 // --- TAB NAVIGATION ---
 function openTab(tabId, btnElement) {
