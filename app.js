@@ -4,7 +4,7 @@ const apiKey = 'ZWPD26FNK8TNRY9ZQAWPWWKHG';
 async function fetchWeather(location = "Luqa,Malta") {
     try {
         // Dynamic URL based on what location is passed in
-        const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&key=${apiKey}&contentType=json`;
+        const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(location)}?unitGroup=metric...`;
         
         const response = await fetch(url);
         const data = await response.json();
