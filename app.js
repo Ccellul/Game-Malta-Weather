@@ -117,7 +117,7 @@ async function fetchWeather(location = "Luqa,Malta") {
                         </div>
                         <div style="font-size: 0.9rem; color: #a4b0be;">${getWeatherEmoji(day.icon)} ${day.conditions}</div>
                         <div style="font-size: 0.85rem; color: #ffffff; background: rgba(116, 185, 255, 0.15); padding: 3px 8px; border-radius: 4px; margin-top: 4px;">
-                            💨 ${getWindDirection(day.winddir)} @ ${getBeaufort(day.windspeed)} BFT
+                             ${getWindDirection(day.winddir)} @ ${getBeaufort(day.windspeed)} BFT
                         </div>
                     </div>`;
             }
