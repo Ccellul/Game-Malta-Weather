@@ -1,10 +1,12 @@
 {
+  "id": "/game-malta-weather",
   "name": "Game Malta Weather",
   "short_name": "Game Weather",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#0f121a",
   "theme_color": "#141823",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "icon-192.png",
