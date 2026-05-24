@@ -129,9 +129,14 @@
                 </ul>
             </div>
 
-            <div class="card rule-card">
-                <h3> Finches (7 Species) Trapping</h3>
-                <ul>
+            <div class="card" onclick="openFinchPage()" style="cursor: pointer; position: relative; transition: background 0.2s;">
+                
+                <div style="display: flex; justify-content: space-between; align-items: left; margin-bottom: 10px;">
+                    <h3 style="color: #eccc68; margin: 0; font-size: 1.15rem;">Finches (7 Species) Trapping</h3>
+                    <span style="color: #eccc68; font-weight: bold; font-size: 1.1rem;">➡</span>
+                </div>
+
+                <ul style="margin: 0; padding-left: 20px; color: #ffffff; line-height: 1.6; text-align: left; list-style-type: disc;">
                     <li>Research period: As per derogation (20th Oct to 20th Dec).</li>
                     <li>Live decoys must be ringed.</li>
                     <li>All birds caught must be released after recording.</li>
@@ -139,7 +144,7 @@
             </div>
 
             <div class="card rule-card">
-                <h3> Plover & Song Thrush</h3>
+                <h3> Plover & Song Thrush - Trapping</h3>
                 <ul>
                     <li>Season: 20th Oct to 10th Jan.</li>
                     <li>Manual or whistle decoys only.</li>
@@ -170,5 +175,90 @@
         </div>
 
     <script src="app.js"></script>
+
+<div id="finch-detail-page" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f121a; z-index: 9999; display: none; overflow-y: auto; padding: 20px; box-sizing: border-box; color: #ffffff; text-align: left;">
+    
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+        <button onclick="closeFinchPage()" style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer;">⬅ Lura għar-Regoli</button>
+        <span style="font-size: 0.85rem; font-weight: bold; background: rgba(236,204,104,0.15); color: #eccc68; padding: 4px 10px; border-radius: 4px;">WBRU Deroga ta' Riċerka</span>
+    </div>
+
+    <h2 style="color: #eccc68; margin-bottom: 5px; text-align: left;">L-Insib tal-Għasafar tal-Għana</h2>
+    <p style="font-size: 0.9rem; color: #a4b0be; margin-bottom: 20px; text-align: left;">Qafas u r-regolamenti uffiċjali tal-WBRU dwar id-deroga għar-riċerka u l-istudju tal-vantaġġi (Finches).</p>
+
+    <div class="card" style="background: #141823; padding: 18px; border-radius: 10px; margin-bottom: 25px; border-left: 4px solid #eccc68; text-align: left;">
+        <h4 style="margin: 0 0 12px 0; color: #eccc68; font-size: 1.05rem;">⚠️ Kundizzjonijiet Ewlenin tad-Deroga</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.85rem; color: #f1f2f6; line-height: 1.6; list-style-type: disc; text-align: left;">
+            <li style="margin-bottom: 6px;"><strong>Rilaxx Immedjat:</strong> Kull għasfur tal-għana maqbud irid jiġi ċċekkjat għal ċrieket eżistenti, jiġi rreġistrat, imdaħħal fid-data, u meħlus minnufih lura n-natura bl-akbar kura.</li>
+            <li style="margin-bottom: 6px;"><strong>Iċ-Ċrieket tal-Mansi:</strong> L-għasafar użati bħala mansi (sriedak live-decoys) iridu jkunu manswati b'mod legali u jġorru fuqhom iċ-ċurkett uffiċjali tal-WBRU li jintuża darba biss.</li>
+            <li style="margin-bottom: 6px;"><strong>Apparati Elettroniċi:</strong> Huwa strettament ipprojbit l-użu ta' apparat li jipproduċi ħsejjes artifiċjali jew rreġistrati (synthetic lures) biex jattira l-għasafar fuq il-mansab.</li>
+            <li style="margin-bottom: 6px;"><strong>Ftuħ Netting/Xbieki:</strong> Ix-xbieki (clap-nets) jistgħu jinfetħu biss fuq siti rreġistrati, approvati u mmarkati b'mod ċar bil-koordinati tal-GPS uffiċjali sottomessi fl-applikazzjoni tiegħek.</li>
+            <li style="margin-bottom: 6px;"><strong>Rappurtar Obbligatorju:</strong> Kull qbid, anke jekk l-għasfur kien diġà mċurkat barra minn Malta, irid jiġi rrapportat immedjatament permezz tas-sistema tal-SMS tal-WBRU qabel ma jinħeles.</li>
+        </ul>
+    </div>
+
+    <h3 style="margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; text-align: left; color: #eccc68;">Is-7 Speċi tal-Għana (WBRU Order)</h3>
+
+    <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 40px; text-align: left;">
+        
+        <div style="display: flex; background: #141823; border-radius: 8px; padding: 12px; gap: 15px; align-items: center;">
+            <img src="finch1.jpg" alt="Ġojjin" style="width: 75px; height: 75px; object-fit: cover; border-radius: 6px; background: rgba(255,255,255,0.05);">
+            <div>
+                <strong style="font-size: 1.05rem; color: #ffffff;">3. Ġojjin</strong> <span style="font-size: 0.85rem; color: #eccc68;">(Linnet)</span>
+                <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #a4b0be; font-style: italic;">Linaria cannabina</p>
+            </div>
+        </div>
+
+        <div style="display: flex; background: #141823; border-radius: 8px; padding: 12px; gap: 15px; align-items: center;">
+            <img src="finch2.jpg" alt="Gardell" style="width: 75px; height: 75px; object-fit: cover; border-radius: 6px; background: rgba(255,255,255,0.05);">
+            <div>
+                <strong style="font-size: 1.05rem; color: #ffffff;">4. Gardell</strong> <span style="font-size: 0.85rem; color: #eccc68;">(Goldfinch)</span>
+                <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #a4b0be; font-style: italic;">Carduelis carduelis</p>
+            </div>
+        </div>
+
+        <div style="display: flex; background: #141823; border-radius: 8px; padding: 12px; gap: 15px; align-items: center;">
+            <img src="finch3.jpg" alt="Verdun" style="width: 75px; height: 75px; object-fit: cover; border-radius: 6px; background: rgba(255,255,255,0.05);">
+            <div>
+                <strong style="font-size: 1.05rem; color: #ffffff;">5. Verdun</strong> <span style="font-size: 0.85rem; color: #eccc68;">(Greenfinch)</span>
+                <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #a4b0be; font-style: italic;">Chloris chloris</p>
+            </div>
+        </div>
+
+        <div style="display: flex; background: #141823; border-radius: 8px; padding: 12px; gap: 15px; align-items: center;">
+            <img src="finch4.jpg" alt="Appellstrun" style="width: 75px; height: 75px; object-fit: cover; border-radius: 6px; background: rgba(255,255,255,0.05);">
+            <div>
+                <strong style="font-size: 1.05rem; color: #ffffff;">6. Appellstrun</strong> <span style="font-size: 0.85rem; color: #eccc68;">(Siskin)</span>
+                <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #a4b0be; font-style: italic;">Spinus spinus</p>
+            </div>
+        </div>
+
+        <div style="display: flex; background: #141823; border-radius: 8px; padding: 12px; gap: 15px; align-items: center;">
+            <img src="finch5.jpg" alt="Għasfur taż-Żebbuġ" style="width: 75px; height: 75px; object-fit: cover; border-radius: 6px; background: rgba(255,255,255,0.05);">
+            <div>
+                <strong style="font-size: 1.05rem; color: #ffffff;">7. Għasfur taż-Żebbuġ</strong> <span style="font-size: 0.85rem; color: #eccc68;">(Hawfinch)</span>
+                <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #a4b0be; font-style: italic;">Coccothraustes coccothraustes</p>
+            </div>
+        </div>
+
+        <div style="display: flex; background: #141823; border-radius: 8px; padding: 12px; gap: 15px; align-items: center;">
+            <img src="finch6.jpg" alt="Sponsun" style="width: 75px; height: 75px; object-fit: cover; border-radius: 6px; background: rgba(255,255,255,0.05);">
+            <div>
+                <strong style="font-size: 1.05rem; color: #ffffff;">8. Sponsun</strong> <span style="font-size: 0.85rem; color: #eccc68;">(Chaffinch)</span>
+                <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #a4b0be; font-style: italic;">Fringilla coelebs</p>
+            </div>
+        </div>
+
+        <div style="display: flex; background: #141823; border-radius: 8px; padding: 12px; gap: 15px; align-items: center;">
+            <img src="finch7.jpg" alt="Appell" style="width: 75px; height: 75px; object-fit: cover; border-radius: 6px; background: rgba(255,255,255,0.05);">
+            <div>
+                <strong style="font-size: 1.05rem; color: #ffffff;">9. Appell</strong> <span style="font-size: 0.85rem; color: #eccc68;">(Serin)</span>
+                <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #a4b0be; font-style: italic;">Serinus serinus</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 </body>
 </html>
