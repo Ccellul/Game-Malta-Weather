@@ -302,3 +302,20 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.log('Service Worker failed:', err));
   });
 }
+
+// Open full screen Finches view
+function openFinchPage() {
+    const page = document.getElementById('finch-detail-page');
+    if (page) {
+        page.style.display = 'block';
+        page.scrollTo(0, 0);
+    }
+}
+
+// Close Finches view and return to main dashboard layout
+function closeFinchPage() {
+    const page = document.getElementById('finch-detail-page');
+    if (page) {
+        page.style.display = 'none';
+    }
+}
