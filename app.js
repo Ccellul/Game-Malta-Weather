@@ -25,7 +25,6 @@ async function fetchWeather(location = "Luqa,Malta") {
         updateText('wind-dir', getWindDirection(current.winddir));
         updateText('wind-bft', `${getBeaufort(current.windspeed)} BFT`);
         updateText('moon-phase', getMoonPhaseName(todayData.moonphase));
-                // Add these lines inside your fetchWeather function under Basic Info:
         updateText('today-max', `${Math.round(todayData.tempmax)}°C`);
         updateText('today-min', `${Math.round(todayData.tempmin)}°C`);
 
