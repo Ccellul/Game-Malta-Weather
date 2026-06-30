@@ -25,8 +25,6 @@ async function fetchWeather(location = "Luqa,Malta") {
         updateText('wind-dir', getWindDirection(current.winddir));
         updateText('wind-bft', `${getBeaufort(current.windspeed)} BFT`);
         updateText('moon-phase', getMoonPhaseName(todayData.moonphase));
-        updateText('today-max', `${Math.round(todayData.tempmax)}°C`);
-        updateText('today-min', `${Math.round(todayData.tempmin)}°C`);
 
         // 2. Moon Calendar
         const moonCalContainer = document.getElementById('moon-calendar');
