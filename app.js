@@ -1,7 +1,7 @@
 const apiKey = 'ZWPD26FNK8TNRY9ZQAWPWWKHG'; 
 
 // --- MAIN FETCH FUNCTION WITH FIXED LOCATION PARAMETER ---
-async function fetchWeather(location = "Luqa,Malta") {
+async function fetchWeather(location = "35.85,14.48") {
     try {
         // Dynamic URL based on what location is passed in from the dropdown
         const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(location)}?unitGroup=metric&key=${apiKey}&contentType=json`;
